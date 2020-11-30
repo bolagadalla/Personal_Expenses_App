@@ -3,7 +3,7 @@
 An app used to track personal expenses. It adds the expenses into a graph containing all the expenses for each day of the week for the past week.
 
 ## What I Learned:
-	- [ ] Learn More About Widgets and Other Different Widgets
+	- [x] Learn More About Widgets and Other Different Widgets
 	- [ ] Theming the App and Material Design
 	- [ ] Working with Images and Custom Fonts
 	- [ ] Adding Business Logic to the App
