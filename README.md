@@ -11,5 +11,5 @@ An app used to track personal expenses. It adds the expenses into a graph contai
 
 ## How The App Looks
 <p align="center">
-  <img src="" width="350" title="App Screenshot">
+  <img src="https://github.com/bolagadalla/Personal_Expenses_App/blob/main/assets/images/Screenshot_1606896010.png?raw=true" width="350" title="App Screenshot">
 </p>
