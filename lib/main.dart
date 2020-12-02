@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
+              button: TextStyle(color: Colors.white),
             ),
         appBarTheme: AppBarTheme(
           textTheme: ThemeData.light().textTheme.copyWith(
@@ -64,12 +65,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   // Adds a new transcation to the list of transactions
-  void _addNewTransaction({String title, double amount}) {
+  void _addNewTransaction({String title, double amount, DateTime date}) {
     final newTrans = Transaction(
       id: DateTime.now().toString(),
       title: title,
       amountSpent: amount,
-      date: DateTime.now(),
+      date: date,
     );
 
     // rebuild the widgets to reflect the addiction of the transaction
@@ -92,6 +93,12 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  void _deleteTransaction(String id) {
+    setState(() {
+      _transactions.removeWhere((element) => element.id == id);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         children: [
           Chart(_recentTransactions),
-          TransactionList(_transactions),
+          TransactionList(_transactions, _deleteTransaction),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

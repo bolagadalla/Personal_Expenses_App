@@ -1,39 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 // We need this to be StatefulWidget so that when we type something into
 // The overlay, it wouldnt automatically clears it.
 class AddTransaction extends StatefulWidget {
-  final Function addNewTransaction;
+  final Function _addNewTransaction;
 
-  AddTransaction(this.addNewTransaction);
+  AddTransaction(this._addNewTransaction);
 
   @override
   _AddTransactionState createState() => _AddTransactionState();
 }
 
 class _AddTransactionState extends State<AddTransaction> {
-  final titleController = TextEditingController();
-  final amountController = TextEditingController();
+  final _titleController = TextEditingController();
+  final _amountController = TextEditingController();
+  DateTime _datePicked;
 
-  void submittedData() {
-    final enteredTitle = titleController.text;
-    final enteredAmount = amountController.text.isNotEmpty
-        ? double.parse(amountController.text)
+  void _submittedData() {
+    final enteredTitle = _titleController.text;
+    final enteredAmount = _amountController.text.isNotEmpty
+        ? double.parse(_amountController.text)
         : 0.00;
 
-    if (enteredTitle.isEmpty || enteredAmount <= 0) {
-      // NEED TO CREATE AN ERROR HANDLER TO DISPLAY TO USER
-      print("Inproper field");
+    if (enteredTitle.isEmpty || enteredAmount <= 0 || _datePicked == null)
       return;
-    }
-
     // Gives us access to the variables in the super class
-    widget.addNewTransaction(
+    widget._addNewTransaction(
       title: enteredTitle,
       amount: enteredAmount,
+      date: _datePicked,
     ); // Add Transaction
 
     Navigator.of(context).pop();
+  }
+
+  void _presentDatePicker() {
+    showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2020),
+            lastDate: DateTime.now())
+        .then((value) {
+      if (value == null) return;
+
+      setState(() {
+        _datePicked = value;
+      });
+    });
   }
 
   @override
@@ -46,23 +60,45 @@ class _AddTransactionState extends State<AddTransaction> {
           children: [
             TextField(
               decoration: InputDecoration(labelText: "Title"),
-              controller: titleController,
-              onSubmitted: (_) => submittedData(),
+              controller: _titleController,
+              onSubmitted: (_) => _submittedData(),
             ),
             TextField(
               decoration: InputDecoration(labelText: "Amount"),
-              controller: amountController,
+              controller: _amountController,
               // keyboardType: TextInputType.number, since we need decimal on iOS we need the follwong:
               keyboardType: TextInputType.numberWithOptions(
                 decimal: true,
               ),
-              onSubmitted: (_) => submittedData(),
+              onSubmitted: (_) => _submittedData(),
             ),
-            FlatButton(
-              onPressed: submittedData,
-              child: Text("Add Transaction"),
-              textColor: Theme.of(context).accentColor,
-            )
+            Container(
+              height: 70,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(_datePicked == null
+                      ? "No Date Chosen!"
+                      : DateFormat.yMMMd().format(_datePicked)),
+                  FlatButton(
+                    child: Text("Choose Date"),
+                    textColor: Theme.of(context).accentColor,
+                    onPressed: _presentDatePicker,
+                  ),
+                ],
+              ),
+            ),
+            RaisedButton(
+              onPressed: _submittedData,
+              child: Text(
+                "Add Transaction",
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              color: Theme.of(context).accentColor,
+              textColor: Theme.of(context).textTheme.button.color,
+            ),
           ],
         ),
       ),

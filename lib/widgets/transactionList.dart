@@ -7,13 +7,14 @@ import '../models/transaction.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
+  final Function deleteTransaction;
 
-  TransactionList(this.transactions);
+  TransactionList(this.transactions, this.deleteTransaction);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 450,
+      height: 460,
       width: double.infinity,
       // Much more performant then ListView
       // it loads every item lazy which means when ever it needs it.
@@ -24,7 +25,10 @@ class TransactionList extends StatelessWidget {
               // if the list is empty then display something other then a list
               itemCount: transactions.length,
               itemBuilder: (ctx, index) {
-                return TransactionCard(transactions[index]);
+                return TransactionCard(
+                  transactions[index],
+                  deleteTransaction,
+                );
               },
             ),
     );
