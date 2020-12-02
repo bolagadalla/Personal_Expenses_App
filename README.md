@@ -4,8 +4,9 @@ An app used to track personal expenses. It adds the expenses into a graph contai
 
 ## What I Learned:
 	- [x] Learn More About Widgets and Other Different Widgets
-	- [ ] Theming the App and Material Design
-	- [ ] Working with Images and Custom Fonts
+	- [x] Theming the App and Material Design
+	- [x] Working with Images and Custom Fonts
+	- [x] Working with pubspec.yaml for dependencies
 	- [ ] Adding Business Logic to the App
 
 ## How The App Looks

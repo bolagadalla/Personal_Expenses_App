@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
-import './transaction.dart';
+import './widgets/addTransaction.dart';
+import './widgets/transactionList.dart';
+import './models/transaction.dart';
+import './widgets/chart.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,106 +14,104 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Personal Expenses",
+      theme: ThemeData(
+        primarySwatch: Colors.indigo,
+        accentColor: Colors.purple[900],
+        fontFamily: "Quicksand",
+        textTheme: ThemeData.light().textTheme.copyWith(
+              title: TextStyle(
+                fontFamily: "OpenSans",
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+        appBarTheme: AppBarTheme(
+          textTheme: ThemeData.light().textTheme.copyWith(
+                title: TextStyle(
+                  fontFamily: "OpenSans",
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+        ),
+      ),
       home: MyHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  final List<Transaction> transactions = [
-    Transaction(
-      id: "t1",
-      title: "New Shoes",
-      amountSpent: 69.99,
+// Since we want to show an overlay window, then we need a new class with
+// Its own context so that we can only use the body rather then the whole page
+// Otherwise it wont show the overlay
+// So whenever we need to have an overlay, then we must create a new class for it to be within
+// Also it needs to be stateful widget
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  // The list of transactions
+  final List<Transaction> _transactions = [];
+
+  // Adds a new transcation to the list of transactions
+  void _addNewTransaction({String title, double amount}) {
+    final newTrans = Transaction(
+      id: DateTime.now().toString(),
+      title: title,
+      amountSpent: amount,
       date: DateTime.now(),
-    ),
-    Transaction(
-      id: "t2",
-      title: "New Pants",
-      amountSpent: 19.99,
-      date: DateTime.now(),
-    ),
-  ];
+    );
+
+    // rebuild the widgets to reflect the addiction of the transaction
+    setState(() {
+      _transactions.add(newTrans);
+    });
+  }
+
+  void _startAddNewTransactions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        // This will catch the tap within the overlay to not allow it to close automatically
+        return GestureDetector(
+          child: AddTransaction(_addNewTransaction),
+          onTap: () {},
+          behavior: HitTestBehavior.opaque,
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("My Personal Expenses"),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Card(
-            child: Container(
-              child: Text("CHART!"),
-              width: double.infinity,
-              margin: EdgeInsets.all(20),
-            ),
-            color: Colors.blue,
-            margin: EdgeInsets.fromLTRB(5, 5, 5, 12),
-          ),
-          Column(
-            children: transactions.map((tx) {
-              // The transaction Card
-              return Card(
-                // Container to give me margine
-                child: Container(
-                  // Row for icon and title with date
-                  child: Row(
-                    children: [
-                      // Column to give me icon and amount under it
-                      Column(
-                        children: [
-                          Container(
-                            child: Icon(
-                              Icons.attach_money,
-                              color: Colors.green,
-                              size: 32,
-                            ),
-                            margin: EdgeInsets.only(top: 5),
-                          ),
-                          Container(
-                            child: Text(
-                              "\$" + tx.amountSpent.toString(),
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            margin: EdgeInsets.fromLTRB(8, 5, 8, 5),
-                          )
-                        ],
-                      ),
-                      // Column for the title and date
-                      Column(
-                        children: [
-                          // Container to give me margin for title
-                          Container(
-                            child: Text(
-                              tx.title,
-                              style: TextStyle(
-                                fontSize: 21,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            margin: EdgeInsets.fromLTRB(10, 5, 0, 5),
-                          ),
-                          // Date with text interplation
-                          Text(tx.date.month.toString() +
-                              "-" +
-                              tx.date.day.toString() +
-                              "-" +
-                              tx.date.year.toString()),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                color: Colors.white12,
-              );
-            }).toList(),
+        title: Text(
+          "My Personal Expenses",
+          textAlign: TextAlign.center,
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              _startAddNewTransactions(context);
+            },
           ),
         ],
+      ),
+      body: Column(
+        children: [
+          Chart(),
+          TransactionList(_transactions),
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          _startAddNewTransactions(context);
+        },
       ),
     );
   }
