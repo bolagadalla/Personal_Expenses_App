@@ -54,6 +54,15 @@ class _MyHomePageState extends State<MyHomePage> {
   // The list of transactions
   final List<Transaction> _transactions = [];
 
+  List<Transaction> get _recentTransactions {
+    // Gives only elements where a certain condition is met
+    return _transactions.where((element) {
+      // Return the elements that their date is after today - 7 days.
+      // i.e. if today was monday gives any element that was made after last monday
+      return element.date.isAfter(DateTime.now().subtract(Duration(days: 7)));
+    }).toList();
+  }
+
   // Adds a new transcation to the list of transactions
   void _addNewTransaction({String title, double amount}) {
     final newTrans = Transaction(
@@ -102,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Column(
         children: [
-          Chart(),
+          Chart(_recentTransactions),
           TransactionList(_transactions),
         ],
       ),

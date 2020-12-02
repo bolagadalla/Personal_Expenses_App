@@ -10,57 +10,28 @@ class TransactionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      // Container to give me margine
-      child: Row(
-        children: [
-          // Column to give me icon and amount under it
-          Column(
-            children: [
-              Container(
-                child: Icon(
-                  Icons.attach_money,
-                  color: Theme.of(context).primaryColor,
-                  size: 32,
-                ),
-                margin: EdgeInsets.only(top: 5),
-              ),
-              // Container for the Price text
-              Container(
-                child: Text(
-                  "\$${transaction.amountSpent.toStringAsFixed(2)}",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                margin: EdgeInsets.fromLTRB(8, 5, 8, 5),
-                padding: EdgeInsets.all(8),
-                color: Theme.of(context).primaryColor,
-              )
-            ],
+      margin: EdgeInsets.symmetric(
+        vertical: 8,
+        horizontal: 5,
+      ),
+      elevation: 3,
+      child: ListTile(
+        leading: CircleAvatar(
+          radius: 30,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FittedBox(
+                child: Text("\$${transaction.amountSpent.toStringAsFixed(2)}")),
           ),
-          // Column for the title and date
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            //mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              // Container to give me margin for title
-              Text(
-                transaction.title,
-                style: Theme.of(context).textTheme.title,
-                textAlign: TextAlign.center,
-              ),
-              // Date with text interplation
-              Text(
-                DateFormat("yMMMd").format(transaction.date),
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
-              ),
-            ],
-          ),
-        ],
+        ),
+        title: Text(
+          transaction.title,
+          style: Theme.of(context).textTheme.title,
+        ),
+        subtitle: Text(
+          DateFormat.yMMMd().format(transaction.date),
+        ),
+        //trailing: ,
       ),
     );
   }
