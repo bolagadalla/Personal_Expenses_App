@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:Personal_Expenses_App/widgets/adaptive_widgets/adaptive_flat_button.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -37,11 +41,11 @@ class _AddTransactionState extends State<AddTransaction> {
 
   void _presentDatePicker() {
     showDatePicker(
-            context: context,
-            initialDate: DateTime.now(),
-            firstDate: DateTime(2020),
-            lastDate: DateTime.now())
-        .then((value) {
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+    ).then((value) {
       if (value == null) return;
 
       setState(() {
@@ -89,11 +93,10 @@ class _AddTransactionState extends State<AddTransaction> {
                     Text(_datePicked == null
                         ? "No Date Chosen!"
                         : DateFormat.yMMMd().format(_datePicked)),
-                    FlatButton(
-                      child: Text("Choose Date"),
-                      textColor: Theme.of(context).accentColor,
-                      onPressed: _presentDatePicker,
-                    ),
+                    AdaptiveFlatButton(
+                      buttonText: "Choose Date",
+                      onPressFunction: _presentDatePicker,
+                    )
                   ],
                 ),
               ),

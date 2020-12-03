@@ -9,6 +9,7 @@ An app used to track personal expenses. It adds the expenses into a graph contai
 	- [x] Working with pubspec.yaml for dependencies
 	- [x] Adding Business Logic to the App
 	- [x] Making the app responsive
+	- [x] Making the app adoptive based on the device type
 
 ## How The App Looks
 <p align="center">
