@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import './widgets/addTransaction.dart';
 import './widgets/transactionList.dart';
@@ -6,12 +7,19 @@ import './models/transaction.dart';
 import './widgets/chart.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // This gives us the font size scale in the user device settings
+    //final curScaleFactor = MediaQuery.of(context).textScaleFactor;
     return MaterialApp(
       title: "Personal Expenses",
       theme: ThemeData(
@@ -101,25 +109,38 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "My Personal Expenses",
-          textAlign: TextAlign.center,
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              _startAddNewTransactions(context);
-            },
-          ),
-        ],
+    final mediaQuery = MediaQuery.of(context);
+    final appBar = AppBar(
+      title: Text(
+        "My Personal Expenses",
+        textAlign: TextAlign.center,
       ),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () {
+            _startAddNewTransactions(context);
+          },
+        ),
+      ],
+    );
+    return Scaffold(
+      appBar: appBar,
       body: Column(
         children: [
-          Chart(_recentTransactions),
-          TransactionList(_transactions, _deleteTransaction),
+          Container(
+            height: (mediaQuery.size.height -
+                    appBar.preferredSize.height -
+                    mediaQuery.padding.top) *
+                0.3,
+            child: Chart(_recentTransactions),
+          ),
+          Container(
+              height: (mediaQuery.size.height -
+                      appBar.preferredSize.height -
+                      mediaQuery.padding.top) *
+                  0.7,
+              child: TransactionList(_transactions, _deleteTransaction)),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

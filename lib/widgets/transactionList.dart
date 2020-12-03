@@ -14,7 +14,6 @@ class TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 460,
       width: double.infinity,
       // Much more performant then ListView
       // it loads every item lazy which means when ever it needs it.

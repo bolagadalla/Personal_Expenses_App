@@ -52,54 +52,64 @@ class _AddTransactionState extends State<AddTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            TextField(
-              decoration: InputDecoration(labelText: "Title"),
-              controller: _titleController,
-              onSubmitted: (_) => _submittedData(),
-            ),
-            TextField(
-              decoration: InputDecoration(labelText: "Amount"),
-              controller: _amountController,
-              // keyboardType: TextInputType.number, since we need decimal on iOS we need the follwong:
-              keyboardType: TextInputType.numberWithOptions(
-                decimal: true,
+    // The single child scroll view is to allow the Card widget to move up when the keypad is on
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 3,
+        child: Container(
+          padding: EdgeInsets.only(
+            top: 10,
+            left: 10,
+            right: 10,
+            // This will allow the bottom padding to be adjusted based on the keypad
+            bottom: MediaQuery.of(context).viewInsets.bottom + 10,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              TextField(
+                decoration: InputDecoration(labelText: "Title"),
+                controller: _titleController,
+                onSubmitted: (_) => _submittedData(),
               ),
-              onSubmitted: (_) => _submittedData(),
-            ),
-            Container(
-              height: 70,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(_datePicked == null
-                      ? "No Date Chosen!"
-                      : DateFormat.yMMMd().format(_datePicked)),
-                  FlatButton(
-                    child: Text("Choose Date"),
-                    textColor: Theme.of(context).accentColor,
-                    onPressed: _presentDatePicker,
-                  ),
-                ],
+              TextField(
+                decoration: InputDecoration(labelText: "Amount"),
+                controller: _amountController,
+                // keyboardType: TextInputType.number, since we need decimal on iOS we need the follwong:
+                keyboardType: TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
+                onSubmitted: (_) => _submittedData(),
               ),
-            ),
-            RaisedButton(
-              onPressed: _submittedData,
-              child: Text(
-                "Add Transaction",
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
+              Container(
+                height: 70,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(_datePicked == null
+                        ? "No Date Chosen!"
+                        : DateFormat.yMMMd().format(_datePicked)),
+                    FlatButton(
+                      child: Text("Choose Date"),
+                      textColor: Theme.of(context).accentColor,
+                      onPressed: _presentDatePicker,
+                    ),
+                  ],
                 ),
               ),
-              color: Theme.of(context).accentColor,
-              textColor: Theme.of(context).textTheme.button.color,
-            ),
-          ],
+              RaisedButton(
+                onPressed: _submittedData,
+                child: Text(
+                  "Add Transaction",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                color: Theme.of(context).accentColor,
+                textColor: Theme.of(context).textTheme.button.color,
+              ),
+            ],
+          ),
         ),
       ),
     );

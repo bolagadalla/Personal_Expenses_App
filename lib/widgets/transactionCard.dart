@@ -32,14 +32,26 @@ class TransactionCard extends StatelessWidget {
         subtitle: Text(
           DateFormat.yMMMd().format(transaction.date),
         ),
-        trailing: IconButton(
-          icon: Icon(
-            Icons.delete,
-            color: Colors.red,
-            size: 25,
-          ),
-          onPressed: () => deleteTransaction(transaction.id),
-        ),
+        // Build a flatbutton with icon if the width is big enough, otherwise build an icon button
+        trailing: MediaQuery.of(context).size.width > 460
+            ? FlatButton.icon(
+                onPressed: () => deleteTransaction(transaction.id),
+                icon: Icon(Icons.delete),
+                label: Text(
+                  "Delete",
+                  textAlign: TextAlign.center,
+                  style: TextTheme().subtitle1,
+                ),
+                textColor: Theme.of(context).errorColor,
+              )
+            : IconButton(
+                icon: Icon(
+                  Icons.delete,
+                  color: Colors.red,
+                  size: 25,
+                ),
+                onPressed: () => deleteTransaction(transaction.id),
+              ),
         //trailing: ,
       ),
     );
